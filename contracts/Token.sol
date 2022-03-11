@@ -7,6 +7,7 @@ contract Token {
   string public name = "Capstone Token";
   string public symbol = "CSTK";
   uint256 public decimals = 18;
+  uint256 totalTokens = 1000000;
   uint256 public totalSupply;
   mapping(address => uint256) public balanceOf;
   mapping(address => mapping(address => uint256)) public allowance;
@@ -16,7 +17,7 @@ contract Token {
   event Approval(address indexed owner, address indexed spender, uint256 value);
 
   constructor() {
-    totalSupply = 1000000 * (10 ** decimals);
+    totalSupply = totalTokens * (10 ** decimals);
     balanceOf[msg.sender] = totalSupply;
   }
 
