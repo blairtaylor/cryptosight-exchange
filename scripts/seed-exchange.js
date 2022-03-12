@@ -1,9 +1,10 @@
-// Contracts
-const Token = artifacts.require("Token")
-const Exchange = artifacts.require("Exchange")
+require("@nomiclabs/hardhat-web3");
+
+const { ethers } = require("ethers")
 
 // Utils
 const ETHER_ADDRESS = '0x0000000000000000000000000000000000000000' // Ether token deposit address
+
 const ether = (n) => {
   return new web3.utils.BN(
     web3.utils.toWei(n.toString(), 'ether')
@@ -19,14 +20,20 @@ const wait = (seconds) => {
 module.exports = async function(callback) {
   try {
     // Fetch accounts from wallet - these are unlocked
-    const accounts = await web3.eth.getAccounts()
+    console.log('Fetching accounts...');
+    const accounts = await web3.eth.getAccounts();
 
     // Fetch the deployed token
-    const token = await Token.deployed()
+    const Token = await ethers.getContractFactory('Token')
+    const token = await Token.deploy()
+    await token.deployed()
+
     console.log('Token fetched', token.address)
 
     // Fetch the deployed exchange
-    const exchange = await Exchange.deployed()
+    const Exchange = await ethers.getContractFactory('Exchange')
+    const exchange = await Exchange.deploy()
+
     console.log('Exchange fetched', exchange.address)
 
     // Give tokens to account[1]

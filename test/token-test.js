@@ -5,23 +5,6 @@ const name = 'Capstone Token'
 const symbol = 'CSTK'
 const decimals = '18'
 
-describe('Greeter', function () {
-  it('Running Greeter test cases', async function () {
-    const Greeter = await ethers.getContractFactory('Greeter')
-    const greeter = await Greeter.deploy('Hello, world!')
-    await greeter.deployed()
-
-    expect(await greeter.greet()).to.equal('Hello, world!')
-
-    const setGreetingTx = await greeter.setGreeting('Hola, mundo!')
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait()
-
-    expect(await greeter.greet()).to.equal('Hola, mundo!')
-  })
-})
-
 describe('Token', function () {
   it('Running Token test cases', async function () {
     const Token = await ethers.getContractFactory('Token')

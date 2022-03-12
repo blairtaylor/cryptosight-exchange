@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./Token.sol";
+import "hardhat/console.sol";
 
 contract Exchange {
     // Variables
@@ -65,6 +66,7 @@ contract Exchange {
     }
 
     constructor(address _feeAccount, uint256 _feePercent) {
+        console.log("Exchange constructor invoked");
         feeAccount = _feeAccount;
         feePercent = _feePercent;
     }
@@ -86,29 +88,33 @@ contract Exchange {
         y = msg.value;
     }
 
+    function append(string memory a, string memory b) internal pure returns (string memory) {
+        return string(abi.encodePacked(a, b));
+    }
+
     function depositEther() public payable {
-        //tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value);
+        tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender] + msg.value;
         emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
     }
 
     function withdrawEther(uint256 _amount) public {
         require(tokens[ETHER][msg.sender] >= _amount);
-        //tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
-        //msg.sender.transfer(_amount);
+        tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender] - _amount;
+        payable(msg.sender).transfer(_amount);
         emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
     }
 
     function depositToken(address _token, uint256 _amount) public {
         require(_token != ETHER);
         require(Token(_token).transferFrom(msg.sender, address(this), _amount));
-        //tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount);
+        tokens[_token][msg.sender] = tokens[_token][msg.sender] + _amount;
         emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
     }
 
     function withdrawToken(address _token, uint256 _amount) public {
         require(_token != ETHER);
         require(tokens[_token][msg.sender] >= _amount);
-        //tokens[_token][msg.sender] = tokens[_token][msg.sender].sub(_amount);
+        tokens[_token][msg.sender] = tokens[_token][msg.sender] - _amount;
         require(Token(_token).transfer(msg.sender, _amount));
         emit Withdraw(_token, msg.sender, _amount, tokens[_token][msg.sender]);
     }
