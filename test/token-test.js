@@ -1,14 +1,9 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
-const Web3 = require('web3')
-//const { web3 } = require("web3");
-
-//const ETHER_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const name = 'Capstone Token'
 const symbol = 'CSTK'
 const decimals = '18'
-//const totalSupply = 1000000 * (10 ** decimals).toString();
 
 describe('Greeter', function () {
   it('Running Greeter test cases', async function () {
@@ -35,20 +30,18 @@ describe('Token', function () {
     const oneEther = ethers.BigNumber.from('1000000000000000000')
     const totalTokens = 1000000
     const totalSupplyTokens = oneEther.mul(totalTokens)
+    const accounts = await ethers.getSigners(); // get list of accounts
+    const deployer = accounts[0];
 
-    //const [owner] = await ethers.getSigners()
-    //const transactionCount = await owner.getTransactionCount()
-
-    before(async function () {
-      //accounts = await web3.eth.getAccounts();
-    })
-
+    // test name
     expect(await token.name()).to.equal(name)
+    // test symbol
     expect(await token.symbol()).to.equal(symbol)
+    // test decimals
     expect(await token.decimals()).to.equal(decimals)
-    // total supply is tokens * 10^18
+    // test total supply is tokens * 10^18
     expect(await token.totalSupply()).to.equal(totalSupplyTokens)
-    //expect(transactionCount).to.equal(owner)
-    //expect(await token.balanceOf(owner)).to.equal(totalSupplyTokens);
+    // test that all tokens are assigned to deployer
+    expect(await token.balanceOf(deployer.address)).to.equal(totalSupplyTokens);
   })
 })
