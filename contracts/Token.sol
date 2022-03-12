@@ -1,6 +1,8 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
+
 contract Token {
 
   // Variables
@@ -17,17 +19,20 @@ contract Token {
   event Approval(address indexed owner, address indexed spender, uint256 value);
 
   constructor() {
+    console.log("Token constructor invoked");
     totalSupply = totalTokens * (10 ** decimals);
     balanceOf[msg.sender] = totalSupply;
   }
 
   function transfer(address _to, uint256 _value) public returns (bool success) {
+    console.log("transfer <to, value> invoked");
     require(balanceOf[msg.sender] >= _value);
     _transfer(msg.sender, _to, _value);
     return true;
   }
 
   function _transfer(address _from, address _to, uint256 _value) internal {
+    console.log("transfer <from, to, value> invoked");
     require(_to != address(0));
     balanceOf[_from] = balanceOf[_from] - _value;
     balanceOf[_to] = balanceOf[_to] + _value;
@@ -35,6 +40,7 @@ contract Token {
   }
 
   function approve(address _spender, uint256 _value) public returns (bool success) {
+    console.log("approve invoked");
     require(_spender != address(0));
     allowance[msg.sender][_spender] = _value;
     emit Approval(msg.sender, _spender, _value);
@@ -42,6 +48,7 @@ contract Token {
   }
 
   function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+    console.log("transferFrom invoked");
     require(_value <= balanceOf[_from]);
     require(_value <= allowance[_from][msg.sender]);
     allowance[_from][msg.sender] = allowance[_from][msg.sender] - _value;
